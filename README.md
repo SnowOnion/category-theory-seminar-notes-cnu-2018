@@ -1,19 +1,19 @@
 # category-theory-seminar-notes-cnu-2018
 范畴论讨论班笔记 | Notes for CATegory theory seminar held in Capital Normal University (首都师范大学), Beijing during 2018 autumn.
 
-Pictures, LaTeX docs and PDF docs inside. Written in 中文 | Chinese and English (I'm sure I won't make “full mutual translation*”. So some parts will be in Chinese and others in English).
-
-​	\* What's the idiomatic English expression?
-
-
-
 **范畴论与程序语义入门讨论小组** 2018-2019 秋季学期
 
-**时间**：每周六上午 9:00 - 11:30（第一次时间为 9 月 15 日）
+**时间**：每周六上午 9:00 - 11:30（第一次时间为 9 月 15 日）**9.29 国庆调休停一次！！10.6 未决定**
 
 **地点**：首都师范大学北一区文科楼 806
 
 [[宣传、暂定大纲](https://mp.weixin.qq.com/s?__biz=MzA4ODA5MjE5NA==&mid=2650298085&idx=2&sn=d84d2f690b1679bb7eb5b6e332c730a6&chksm=88238da8bf5404be72f9af27546e412761d40ebd8fd1cd223c13c9cf70df5cad4516dc20c11f&mpshare=1&scene=23&srcid=0910s0hGJjIkGng0tZyRpSJf)]
+
+课下讨论微信群：群二维码太 volatile 了，请加微信 `snowonion`
+
+Pictures, LaTeX docs and PDF docs inside. Written in 中文 | Chinese and English (I'm sure I won't make “full mutual translation*”. So some parts will be in Chinese and others in English).
+
+​	\* What's the idiomatic English expression?
 
 ## 仓库结构
 

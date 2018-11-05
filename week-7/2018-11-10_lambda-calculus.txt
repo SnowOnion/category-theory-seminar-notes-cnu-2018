@@ -1,0 +1,46 @@
+2018-11-10 Sat
+我讲
+
+1. 简单类型 lambda 演算
+（约为 Awodey 书 2.5 Examples of products 的前半，即 p43-45、pdf60-62）
+1.1. Simply typed lambda calculus 的记号；“它用于表示函数”的想法。
+1.2. alpha 等价、beta 规约、eta 变换与 currying/uncurrying。
+    1.2.1. 几个组合子（不含自由变量的 lambda term）
+    1.2.2. 运行 Haskell 程序展示上述概念。
+
+2. 柯里-霍华德对应
+（约为 Awodey 书 2.5 Examples of products 的后半，即 p46、pdf63）
+2.1 自然演绎简介
+2.2. （极小？直觉主义？）命题逻辑的{蕴含,合取}片段的自然演绎 与 simply typed lambda calculus 的对应。“叫‘同构’暂时不合适，目前它只是 证明的范畴→类型的范畴 的函子”。
+    2.2.1. 运行 Haskell 程序——特别是利用 GHCi 能够显示 lambda term 的类型的能力——展示柯霍对应。
+
+3. 
+（约为 Awodey 书 6.6 λ-calculus（p135 起）和 6.7 Variable sets 的内容，及其必要的前置知识）
+TODO。草稿:
+
+(chapter 6.6.)
+1) cartesian closed poset with finite joins（即海廷代数）与直觉主义命题逻辑的对应（同构？）
+2) 上述对应，是 CCC 与 lambda calculus 的对应，在 poset 的特殊情况
+3) Def：一个 lambda 演算的_理论_ L。
+4) Def：_built from 一个理论 L 的笛卡尔闭范畴_ C(L)。
+5) Def(6.16.)：L 在范畴 C 里的 _模型_。（lambda 演算的指称语义（之一？））
+6) Prop(6.17.)：lambda 演算的理论 L 的两个性质
+
+(chapter 6.7.)
+1) We conclude with a special kind of CCC related to the so-called Kripke models of logic, namely categories of variable sets. These categories provide specific examples of the “algebraic” semantics of IPC and λ-calculus just given.
+一次肯定讲不到这儿吧( ﾟ∀。) 先不想了……
+
+
+
+---
+
+说“演算”，就是字符串变换
+
+This is what is sometimes called “denotational semantics” for the λ-calculus. It is essentially:
++ the conventional, set-theoretic semantics 
++ for first-order logic, 
++ but extended to higher types, 
++ restricted to equational theories, 
++ and generalized to CCCs.
+后置定语语言suki，有时候。
+

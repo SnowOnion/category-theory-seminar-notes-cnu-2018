@@ -1,0 +1,195 @@
+\documentclass[]{article}
+
+\usepackage{xeCJK} % 中文
+\usepackage{datetime2} % 不仅要日期还要时间 https://tex.stackexchange.com/questions/2760/omitting-the-date-when-using-maketitle
+
+\usepackage[top=1.0in, bottom=1in, left=1.25in, right=1.25in]{geometry} % 页边距
+\usepackage{float} % 然后所有figure的参数都换成H(大写的), 禁止浮动, 文中放哪就放那 https://www.zhihu.com/question/25082703/answer/101218178 
+
+\usepackage{forest}
+\usepackage{ifthen} % https://ctan.org/pkg/ifthen
+
+\usepackage{makecell} % forced line break in table. Only used part of the answer https://tex.stackexchange.com/questions/2441/how-to-add-a-forced-line-break-inside-a-table-cell
+
+
+\def\a{\alpha}
+\def\b{\beta}
+\def\l{\lambda}
+
+%opening
+\title{Precisely Define \\ Head Position and Normal Order Reduction of Lambda Term \\ with Abstract Syntax Tree Technique}
+\author{SOnion snowonionlee@gmail.com}
+\date{\DTMnow 啊 Overleaf 上默认按零时区时区来的, 如何 fix 东八区?}
+
+\begin{document}
+
+\maketitle
+
+\section{1/2. An AST for Terms of Untyped Lambda Calculus}
+
+This AST (Abstract Syntax Tree) of $\l$-term has 3 kinds s internal nodes: Var (1 child), Abs (2 children), App (2 children). It has 1 kind of leaf node: name of variable.
+
+Here're the examples of correspondence:
+
+\newcommand\ltree[1]{ % 1是参数数量……最多9默认0。#1~#9使用参数。
+	\ifthenelse{#1 = 1}{
+		\begin{forest}
+			[Abs
+				[Var[$ x $]]
+				[Abs[$ y $][$ M $]]
+			]
+		\end{forest}
+	}{
+		\ifthenelse{#1 = 2}{
+			\begin{forest}
+				[App
+					[App[$ M $][$ N $]]
+					[$ P $]
+				]
+			\end{forest}
+		}{
+			\ifthenelse{#1 = 3}{
+				\begin{forest}
+					[App
+						[Var[$ x $]]
+						[App[$ M $][$ N $]]
+					]
+				\end{forest}
+			}{
+				\ifthenelse{#1 = 4}{
+					\begin{forest}
+						[App
+							[Abs[Var[$ x $]][$ M $]]
+							[$ N $]
+						]
+					\end{forest}
+				}{
+					ERROR in document source file!	
+				}		
+			}
+		}
+	}
+}
+
+% 从给出 makecell 的stackexchange问答贴过来的，没琢磨，反正能让第三行好看（不这么设置就会上下顶格）
+\renewcommand\theadalign{bc}
+\renewcommand\theadfont{\bfseries}
+\renewcommand\theadgape{\Gape[4pt]}
+\renewcommand\cellgape{\Gape[4pt]}
+
+% 一开始还用生成器……后来就手写了（一个崩溃点：写\ltreeOne发现两家的生成器都会给 \ 转义；后为路径依赖；有逆向的吗？）
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|c|c|c|} % c 和 l 区别？额好像是居中和左对齐 % TODO 怎么上下紧凑些？草，都包进 makecell 就行，类型是人类的好朋友
+		\hline
+		ID & $\l$ Term     & AST   \\ \hline
+		1 & \makecell{$\l x.(\l y.M)$ \\\\ or $\l x.\l y.M$  because \\ $\l$-abstraction  \\ is right-associative  }  & \makecell{\ltree{1}} \\ \hline
+		2 & \makecell{$(M N) P$ \\\\ or $M N P$ because \\ $\l$-application  \\ is left-associative  } & \makecell{\ltree{2}} \\ \hline
+		3 & \makecell{$\l x.(M N)$  \\\\ or $\l x.M N$ because \\ $\l$-application has \\ higher precedence \\ than $\l$-abstraction} & \makecell{\ltree{3}}    \\ \hline
+		4 & \makecell {$(\l x.M) N$ \\\\ which is the \\ $\b$-redex definition}   & \makecell{\ltree{4}}    \\ \hline
+	\end{tabular}
+	\caption{Untyped $\l$-Term AST Example}
+	\label{table:lambda-term-ast-eg}
+\end{table}
+
+
+\clearpage
+
+\section{2/2. Define Head Position and Normal Order Reduction with AST}
+
+\begin{figure}[H]
+	\centering
+	\begin{forest}
+		[Abs
+			[Var[$x_1$]]
+			[\dots
+				[,phantom]
+				[Abs
+					[Var[$x_n$]]
+					[App
+						[\dots
+							[App
+								[$Q$]
+								[$M_1$]]
+							[,phantom]]
+						[$M_m$]]]]]
+	\end{forest}
+	\caption{The General AST Form of Untyped $\l$-Term. $n \geq 0, m \geq 0$}
+	\label{figure:lambda-term-general-ast-form}
+\end{figure}
+
+Suppose the AST in figure \ref{figure:lambda-term-general-ast-form} denotes $\l$-term $t$.
+
+(i) If $Q$'s root is Abs and $m \geq 1$, then \begin{forest}
+	[App
+		[$Q$]
+		[$M_1$]]
+\end{forest} is defined as the $\b$-redex on the \textbf{head position} of $t$. Denote this redex as $r$.
+
+% TODO
+% \emph{head normal form}
+% \emph{\textbf{head normal form}} 又斜又粗
+(ii) If $Q$'s root is Var, then define that $t$ is in \textbf{head normal form}.\\
+
+
+Then, here's why $t$ is the general form of $\l$-Term AST:
+
+(a) If $n=m=0$, then $t$ degenerates to Var;
+
+(b) If $n=0, m \geq 1$, then $t$ degenerates to App;
+
+(c) If $n \geq 1, m = 0$, $t$ degenerates to \begin{forest}
+	[Abs
+		[,phantom]
+		[\dots
+			[,phantom]
+			[Abs
+				[,phantom]
+				[Var]]]]
+\end{forest} form.\\
+
+
+Last, defining normal order reduction.
+
+(1) As of case (i), $Q$'s root is Abs and $m \geq 1$ so $t$ has head position $\b$-redex $r$. To do \textbf{normal order reduction} on $t$ is to $\b$-reduce $r$.
+
+(2) As of case (ii), to do \textbf{normal order reduction} on $t$ is to do normal order reduction on the non normal form with the least subscript among $M_1,\cdots,M_m$.
+
+
+%\begin{table}[]
+%	\begin{tabular}{|c|c|c|c|}
+%		\hline
+%		ID & $\l$ Term   & Remark    & AST   \\ \hline
+%		1 & \makecell{$\l x.(\l y.M)$ \\ or } & $\l x.\l y.M$  & \ltree{1} \\ \hline
+%		2 & $(M N) P$ & or $M N P$ & \ltree{2} \\ \hline
+%		3 & $\l x.(M N)$ & or $\l x.M N$ & \ltree{3}    \\ \hline
+%		4 & $(\l x.M) N$ & $\b$-redex definition & \ltree{4}    \\ \hline
+%	\end{tabular}
+%\end{table}
+
+%
+%\section{https://math.stackexchange.com/questions/2768395/head-position-in-lambda-calculus}
+%
+%\begin{verbatim}
+%
+%I met the same confusion recently, but I cleared it up by precisely defining “head position” with **AST** (Abstract Syntax Tree) of lambda term.
+%
+%In the question you actually mentioned the term of only **untyped** lambda calculus. So let’s only concern the untyped.
+%
+%# 1/2. An AST for Terms of Untyped Lambda Calculus
+%
+%AST is a very common technique in the theory and practice of programming languages. One can systematically learn it in books or courses concerning **compiler**. 
+%
+%Here we introduce an AST for *terms of untyped lambda calculus (in short, **lambda term**)*   by examples.
+%
+%The AST has 3 kinds of **internal nodes**: Var, Abs, App. Var, denoting variable, always has 1 child. Abs, denoting lambda abstraction, and App, denoting lambda application, always have 2 children.
+%
+%Here’s 4 examples corresponding a lambda term to its AST.
+%
+%\end{verbatim}
+%
+%
+%$\l x.\l y.M$\quad$\longrightarrow$\quad
+
+
+\end{document}
